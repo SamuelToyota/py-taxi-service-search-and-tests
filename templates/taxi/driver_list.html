@@ -1,18 +1,27 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Drivers</h2>
-<form method="get">
-  <input type="text" name="search" placeholder="Search by username">
-  <button type="submit">Search</button>
-</form>
+  <h2>Lista de Motoristas</h2>
 
-<ul>
-  {% for driver in drivers %}
-  <li>
-    <a href="{% url 'driver-detail' driver.id %}">{{ driver.username }}</a>
-  </li>
-  {% endfor %}
-</ul>
+  <form method="get" class="mb-3">
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Buscar por nome de usuário" class="form-control d-inline-block w-auto">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </form>
 
-<a href="{% url 'driver-create' %}" class="btn btn-primary">Create Driver</a>
+  <ul>
+    {% for driver in driver_list %}
+      <li>
+        <a href="{% url 'taxi:driver-detail' driver.id %}">
+          {{ driver.username }}
+          {% if driver.is_current_user %}
+            (Eu)
+          {% endif %}
+        </a>
+      </li>
+    {% empty %}
+      <li>Nenhum motorista encontrado.</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'taxi:driver-create' %}" class="btn btn-success mt-3">Criar novo motorista</a>
 {% endblock %}
